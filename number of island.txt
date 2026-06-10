@@ -1,0 +1,27 @@
+class Solution {
+    public void dfs(int[][] diff, char[][] grid, int rowTotal, int colTotal, int row, int col) {
+        grid[row][col] = '0';
+        for (int i=0; i<4; i++) {
+            int adjRow = row + diff[i][0];
+            int adjCol = col + diff[i][1];
+            if (adjRow >= 0 && adjRow < rowTotal && adjCol >= 0 && adjCol < colTotal && grid[adjRow][adjCol] == '1') {
+                dfs(diff, grid, rowTotal, colTotal, adjRow, adjCol);
+            }
+        }
+    }
+    public int numIslands(char[][] grid) {
+        int rowTotal = grid.length;
+        int colTotal = grid[0].length;
+        int[][] diff = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+        int islandCnt = 0;
+        for (int i=0; i<rowTotal; i++) {
+            for (int j=0; j<colTotal; j++) {
+                if (grid[i][j] == '1') {
+                    islandCnt++;
+                    dfs(diff, grid, rowTotal, colTotal, i, j);
+                }
+            }
+        }
+        return islandCnt;
+    }
+}
