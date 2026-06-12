@@ -1,0 +1,41 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        int size1 = in.nextInt();
+        int size2 = in.nextInt();
+
+        int[] hp1 = new int[size1];
+        int[] hp2 = new int[size2];
+
+        for (int idx = 0; idx < size1; idx++) {
+            hp1[idx] = in.nextInt();
+        }
+
+        for (int idx = 0; idx < size2; idx++) {
+            hp2[idx] = in.nextInt();
+        }
+
+        Arrays.sort(hp1);
+        Arrays.sort(hp2);
+
+        int ans = 0;
+
+        int p1 = size1 - 1;
+        int p2 = size2 - 1;
+
+        while (p1 >= 0 && p2 >= 0) {
+            if (hp2[p2] <= 2 * hp1[p1]) {
+                ans++;
+                p1--;
+                p2--;
+            } else {
+                p2--;
+            }
+        }
+
+        System.out.println(ans);
+    }
+}
