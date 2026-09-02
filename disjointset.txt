@@ -1,0 +1,43 @@
+import java.util.*;
+
+public static int find(int[] arr,int num) {
+    if(arr[num] != num) {
+        arr[num] = find(arr, arr[num]);
+    }
+
+    return arr[num];
+}
+
+public static void join(int x, int y, int[] arr) {
+    int lx = find(arr,x);
+    int ly = find(arr,y);
+    arr[ly] = lx;
+}
+
+void main() {
+    Scanner scanner = new Scanner(System.in);
+
+    int N = scanner.nextInt();
+    int M = scanner.nextInt();
+
+    int[] arr = new int[N + 1];
+    for (int i = 1; i <= N; i++) {
+        arr[i] = i;
+    }
+
+
+    for (int i = 0; i < M; i++) {
+        int x = scanner.nextInt();
+        int y = scanner.nextInt();
+
+        join(x, y, arr);
+    }
+
+    Set<Integer> set = new HashSet<>();
+
+    for (int i = 1; i <= N; i++) {
+        set.add(find(arr, i));
+    }
+
+    System.out.println(set.size());
+}
