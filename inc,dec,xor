@@ -1,0 +1,88 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int Q = Integer.parseInt(st.nextToken());
+
+        int[] a = new int[N];
+
+        // Stores indices whose value is > 0
+        ArrayList<Integer> active = new ArrayList<>();
+
+        // To know whether an index is already in active
+        boolean[] isActive = new boolean[N];
+
+        int ans = 0;
+
+        StringBuilder out = new StringBuilder();
+
+        for (int q = 0; q < Q; q++) {
+
+            st = new StringTokenizer(br.readLine());
+
+            int type = Integer.parseInt(st.nextToken());
+
+            // Type 1: 1 x
+            if (type == 1) {
+
+                int x = Integer.parseInt(st.nextToken()) - 1;
+
+                // Remove old value from XOR
+                ans ^= a[x];
+
+                // Increase A[x]
+                a[x]++;
+
+                // Add new value to XOR
+                ans ^= a[x];
+
+                // If it was previously zero,
+                // add it to active list
+                if (!isActive[x]) {
+                    active.add(x);
+                    isActive[x] = true;
+                }
+
+            }
+
+            // Type 2: 2
+            else {
+
+                ArrayList<Integer> nextActive = new ArrayList<>();
+
+                for (int x : active) {
+
+                    // Remove old value
+                    ans ^= a[x];
+
+                    // Decrease
+                    a[x]--;
+
+                    // Add new value
+                    ans ^= a[x];
+
+                    // Still non-zero
+                    if (a[x] > 0) {
+                        nextActive.add(x);
+                    } else {
+                        isActive[x] = false;
+                    }
+                }
+
+                active = nextActive;
+            }
+
+            out.append(ans).append('\n');
+        }
+
+        System.out.print(out);
+    }
+}
