@@ -1,0 +1,43 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(System.out);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        long k = Long.parseLong(st.nextToken());
+
+        long[] arr = new long[n];
+        boolean[] visit = new boolean[n];
+        st = new StringTokenizer(br.readLine());
+        for (int i=0; i<n; i++) {
+            arr[i] = Long.parseLong(st.nextToken());
+        }
+
+        long curr = 0;
+
+        for (int i=0; i<n; i++) {
+            if (i >= m && visit[i - m]) {
+                curr -= arr[i - m];
+            }
+            if (curr + arr[i] <= k) {
+                System.out.println("Yes");
+                curr += arr[i];
+                visit[i] = true;
+            }
+            else {
+                System.out.println("No");
+            }
+        }
+
+        out.flush();
+    }
+}
