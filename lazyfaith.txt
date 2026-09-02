@@ -1,0 +1,71 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int A = Integer.parseInt(st.nextToken());
+        int B = Integer.parseInt(st.nextToken());
+        int Q = Integer.parseInt(st.nextToken());
+
+        long[] s = new long[A];
+        long[] t = new long[B];
+
+        for (int i = 0; i < A; i++) {
+            s[i] = Long.parseLong(br.readLine());
+        }
+
+        for (int i = 0; i < B; i++) {
+            t[i] = Long.parseLong(br.readLine());
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < Q; i++) {
+            long x = Long.parseLong(br.readLine());
+
+            int si = Arrays.binarySearch(s, x);
+            if (si < 0) si = -si - 1;
+
+            int ti = Arrays.binarySearch(t, x);
+            if (ti < 0) ti = -ti - 1;
+
+            long ans = Long.MAX_VALUE;
+
+            long[] shrines = {
+                si < A ? s[si] : Long.MAX_VALUE,
+                si > 0 ? s[si - 1] : Long.MIN_VALUE
+            };
+
+            long[] temples = {
+                ti < B ? t[ti] : Long.MAX_VALUE,
+                ti > 0 ? t[ti - 1] : Long.MIN_VALUE
+            };
+
+            for (long shrine : shrines) {
+                for (long temple : temples) {
+                    if (shrine == Long.MAX_VALUE || shrine == Long.MIN_VALUE ||
+                        temple == Long.MAX_VALUE || temple == Long.MIN_VALUE) {
+                        continue;
+                    }
+
+                    long d1 = Math.abs(x - shrine);
+                    long d2 = Math.abs(shrine - temple);
+
+                    ans = Math.min(ans, d1 + d2);
+
+                    d1 = Math.abs(x - temple);
+                    d2 = Math.abs(temple - shrine);
+
+                    ans = Math.min(ans, d1 + d2);
+                }
+            }
+
+            sb.append(ans).append('\n');
+        }
+
+        System.out.print(sb);
+    }
+}
