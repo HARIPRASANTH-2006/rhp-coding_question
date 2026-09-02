@@ -1,0 +1,86 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int H = Integer.parseInt(st.nextToken());
+        int W = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+
+        char[][] grid = new char[H][W];
+        boolean[] rowBomb = new boolean[H];
+        boolean[] colBomb = new boolean[W];
+
+        for (int i = 0; i < H; i++) {
+            grid[i] = br.readLine().toCharArray();
+            for (int j = 0; j < W; j++) {
+                if (grid[i][j] == '#') {
+                    rowBomb[i] = true;
+                    colBomb[j] = true;
+                }
+            }
+        }
+
+        int n = H * W;
+        int[] dist = new int[n];
+        Arrays.fill(dist, -1);
+
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+
+        for (int i = 0; i < H; i++) {
+            if (rowBomb[i]) continue;
+
+            for (int j = 0; j < W; j++) {
+                if (colBomb[j] || grid[i][j] == '#') continue;
+
+                int id = i * W + j;
+                dist[id] = 0;
+                queue.offer(id);
+            }
+        }
+
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+
+        while (!queue.isEmpty()) {
+            int id = queue.poll();
+
+            int r = id / W;
+            int c = id % W;
+
+            if (dist[id] == K) continue;
+
+            for (int d = 0; d < 4; d++) {
+                int nr = r + dr[d];
+                int nc = c + dc[d];
+
+                if (nr < 0 || nr >= H || nc < 0 || nc >= W)
+                    continue;
+
+                if (grid[nr][nc] == '#')
+                    continue;
+
+                int next = nr * W + nc;
+
+                if (dist[next] != -1)
+                    continue;
+
+                dist[next] = dist[id] + 1;
+                queue.offer(next);
+            }
+        }
+
+        int ans = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (dist[i] != -1) {
+                ans++;
+            }
+        }
+
+        System.out.println(ans);
+    }
+}
