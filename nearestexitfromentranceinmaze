@@ -1,0 +1,41 @@
+class Solution {
+    public int mini=Integer.MAX_VALUE;
+     public void solve(char ch[][],int r1,int c1,int row,int col,boolean hp[][],int c,int start,int end)
+    {
+        if(r1<0||r1==row||c1<0||c1==col||hp[r1][c1]||ch[r1][c1]=='+')
+        {
+            return;
+        }
+        if((r1==0||c1==0||r1==row-1||c1==col-1)&&ch[r1][c1]=='.'&&(r1!=start||c1!=end))
+        {
+            mini=Math.min(mini,c);
+            return;
+        }
+        if(c>=mini)
+        {
+            return;
+        }
+        hp[r1][c1]=true;
+        solve(ch,r1+1,c1,row,col,hp,c+1,start,end);
+        solve(ch,r1-1,c1,row,col,hp,c+1,start,end);
+        solve(ch,r1,c1-1,row,col,hp,c+1,start,end);
+        solve(ch,r1,c1+1,row,col,hp,c+1,start,end);
+        hp[r1][c1]=false;
+
+    }
+    public int nearestExit(char[][] maze, int[] entrance) {
+        int row=maze.length;
+        int col=maze[0].length;
+        int start=entrance[0];
+        int end=entrance[1];
+        int s1=start;
+        int e1=end;
+        boolean hp[][]=new boolean[row][col];
+        solve(maze,start,end,row,col,hp,0,s1,e1);
+        if(mini==Integer.MAX_VALUE)
+        {
+            mini=-1;
+        }
+        return mini;
+    }
+}
