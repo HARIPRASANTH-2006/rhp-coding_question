@@ -1,0 +1,117 @@
+class Solution {
+    public List<String> findWords(char[][] grid, String[] wordList) {
+        
+        if(wordList == null || grid == null) return new ArrayList<>();
+
+        List<String> foundWords = new ArrayList<>();
+
+        for(String currentWord : wordList) {
+
+            if(exist(grid, currentWord)) {
+                foundWords.add(currentWord);
+            }
+        }
+
+        return foundWords;
+    }
+
+    private boolean exist(char[][] grid, String currentWord) {
+        
+        int rows = grid.length;
+        int cols = grid[0].length;
+
+        for(int r = 0; r < rows; r++) {
+
+            for(int c = 0; c < cols; c++) {
+
+                if(grid[r][c] == currentWord.charAt(0)) {
+
+                    char originalChar = grid[r][c];
+                    grid[r][c] = '$';
+
+                    if(solve(grid, currentWord, r, c, rows, cols, 1)) { 
+                        grid[r][c] = originalChar;
+                        return true;
+                    }
+                    
+                    grid[r][c] = originalChar;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean solve(char[][] grid, String currentWord,
+                          int currentRow, int currentCol,
+                          int rows, int cols, int wordIndex) {
+        
+        if(wordIndex == currentWord.length()) return true;
+
+        if(currentCol + 1 < cols &&
+           grid[currentRow][currentCol + 1] == currentWord.charAt(wordIndex)) {
+            
+            char originalChar = grid[currentRow][currentCol + 1];
+            grid[currentRow][currentCol + 1] = '$';
+
+            if(solve(grid, currentWord, currentRow, currentCol + 1,
+                     rows, cols, wordIndex + 1)) {
+
+                grid[currentRow][currentCol + 1] = originalChar;
+                return true;
+            }
+
+            grid[currentRow][currentCol + 1] = originalChar;
+        }
+
+        if(currentRow + 1 < rows &&
+           grid[currentRow + 1][currentCol] == currentWord.charAt(wordIndex)) {
+            
+            char originalChar = grid[currentRow + 1][currentCol];
+            grid[currentRow + 1][currentCol] = '$';
+
+            if(solve(grid, currentWord, currentRow + 1, currentCol,
+                     rows, cols, wordIndex + 1)) {
+
+                grid[currentRow + 1][currentCol] = originalChar;
+                return true;
+            }
+
+            grid[currentRow + 1][currentCol] = originalChar;
+        }
+
+        if(currentCol - 1 >= 0 &&
+           grid[currentRow][currentCol - 1] == currentWord.charAt(wordIndex)) {
+            
+            char originalChar = grid[currentRow][currentCol - 1];
+            grid[currentRow][currentCol - 1] = '$';
+
+            if(solve(grid, currentWord, currentRow, currentCol - 1,
+                     rows, cols, wordIndex + 1)) {
+
+                grid[currentRow][currentCol - 1] = originalChar;
+                return true;
+            }
+
+            grid[currentRow][currentCol - 1] = originalChar;
+        }
+
+        if(currentRow - 1 >= 0 &&
+           grid[currentRow - 1][currentCol] == currentWord.charAt(wordIndex)) {
+            
+            char originalChar = grid[currentRow - 1][currentCol];
+            grid[currentRow - 1][currentCol] = '$';
+
+            if(solve(grid, currentWord, currentRow - 1, currentCol,
+                     rows, cols, wordIndex + 1)) {
+
+                grid[currentRow - 1][currentCol] = originalChar;
+                return true;
+            }
+
+            grid[currentRow - 1][currentCol] = originalChar;
+        }
+
+        return false;
+    }
+}
