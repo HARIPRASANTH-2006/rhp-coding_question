@@ -1,0 +1,96 @@
+import java.util.*;
+
+class Solution {
+
+    int[][] cells;
+    int row, col;
+
+    int[][] dirs = {
+        {-1, 0},
+        {1, 0},
+        {0, -1},
+        {0, 1}
+    };
+
+    public int latestDayToCross(int row, int col, int[][] cells) {
+
+        this.row = row;
+        this.col = col;
+        this.cells = cells;
+
+        int low = 1;
+        int high = cells.length;
+
+        while (low < high) {
+
+            int mid = low + (high - low + 1) / 2;
+
+            if (canCross(mid)) {
+                low = mid;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        return low;
+    }
+
+    boolean canCross(int day) {
+
+        int[][] grid = new int[row][col];
+
+        // Mark flooded cells
+        for (int i = 0; i < day; i++) {
+
+            int r = cells[i][0] - 1;
+            int c = cells[i][1] - 1;
+
+            grid[r][c] = 1;
+        }
+
+        Queue<int[]> q = new LinkedList<>();
+
+        // Start from every land cell in top row
+        for (int j = 0; j < col; j++) {
+
+            if (grid[0][j] == 0) {
+
+                q.offer(new int[]{0, j});
+
+                // Mark visited
+                grid[0][j] = 1;
+            }
+        }
+
+        // BFS
+        while (!q.isEmpty()) {
+
+            int[] curr = q.poll();
+
+            int r = curr[0];
+            int c = curr[1];
+
+            // Reached bottom
+            if (r == row - 1) {
+                return true;
+            }
+
+            for (int[] dir : dirs) {
+
+                int nr = r + dir[0];
+                int nc = c + dir[1];
+
+                if (nr >= 0 && nr < row &&
+                    nc >= 0 && nc < col &&
+                    grid[nr][nc] == 0) {
+
+                    grid[nr][nc] = 1;
+
+                    q.offer(new int[]{nr, nc});
+                }
+            }
+        }
+
+        return false;
+    }
+}
