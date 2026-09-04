@@ -1,0 +1,39 @@
+import java.util.*;
+
+class Solution {
+
+    public int shortestPath(int[][] graph, int source, int destination) {
+
+        int n = graph.length;
+
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[n];
+        int[] distance = new int[n];
+
+        queue.offer(source);
+        visited[source] = true;
+        distance[source] = 0;
+
+        while (!queue.isEmpty()) {
+
+            int current = queue.poll();
+
+            if (current == destination) {
+                return distance[current];
+            }
+
+            for (int next : graph[current]) {
+
+                if (!visited[next]) {
+
+                    visited[next] = true;
+                    distance[next] = distance[current] + 1;
+
+                    queue.offer(next);
+                }
+            }
+        }
+
+        return -1;
+    }
+}
