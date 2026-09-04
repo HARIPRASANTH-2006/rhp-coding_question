@@ -1,0 +1,96 @@
+import java.util.*;
+
+class SegmentTree {
+
+    int[] tree;
+    int n;
+
+    SegmentTree(int[] arr) {
+        n = arr.length;
+        tree = new int[4 * n];
+        build(arr, 0, 0, n - 1);
+    }
+
+    void build(int[] arr, int node, int start, int end) {
+
+        if (start == end) {
+            tree[node] = arr[start];
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+
+        build(arr, 2 * node + 1, start, mid);
+        build(arr, 2 * node + 2, mid + 1, end);
+
+        tree[node] = Math.min(
+            tree[2 * node + 1],
+            tree[2 * node + 2]
+        );
+    }
+
+    int query(int node, int start, int end, int left, int right) {
+
+        if (right < start || end < left) {
+            return Integer.MAX_VALUE;
+        }
+
+        if (left <= start && end <= right) {
+            return tree[node];
+        }
+
+        int mid = start + (end - start) / 2;
+
+        int minLeft = query(
+            2 * node + 1,
+            start,
+            mid,
+            left,
+            right
+        );
+
+        int minRight = query(
+            2 * node + 2,
+            mid + 1,
+            end,
+            left,
+            right
+        );
+
+        return Math.min(minLeft, minRight);
+    }
+
+    int rangeMin(int left, int right) {
+        return query(0, 0, n - 1, left, right);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+
+        int[] arr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        SegmentTree st = new SegmentTree(arr);
+
+        int q = sc.nextInt();
+
+        while (q-- > 0) {
+
+            int left = sc.nextInt();
+            int right = sc.nextInt();
+
+            System.out.println(st.rangeMin(left, right));
+        }
+
+        sc.close();
+    }
+}
